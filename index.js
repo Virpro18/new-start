@@ -1,11 +1,12 @@
 const express = require("express");
 const app = express();
-const bodyParser = require("body-parser")
-const path = require("path")
+const bodyParser = require("body-parser");
+const path = require("path");
 const ejs = require("ejs");
+const db = require("./db");
 const port = 3001;
 
-app.use(bodyParser.json())
+app.use(bodyParser.json());
 app.use(express.json());
 
 app
@@ -29,7 +30,23 @@ app.get(`/`, (req, res) => {
   // res.render(`index`);
 });
 app.post(`/api`, (req, res) => {
+  const sql = "SELECT FROM * FROM user";
+  db.query(sql, (err, fields) => {});
   console.log(req.body);
+});
+app.post(`/register`, (req, res) => {
+  const { username, password } = req.body;
+  console.log(username, password);
+  const sql = `INSERT INTO user VALUES('0','${username}','${password}');`;
+  db.query(sql, (err, fields) => {
+    console.log(fields);
+    if (err) {
+      console.log(err);
+    } else {
+      console.log("data confirmed");
+      res.send("complete");
+    }
+  });
 });
 app.listen(port, () => {
   console.log(`server running at http://localhost:${port}`);
